@@ -1,492 +1,813 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Radio</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Global Radio</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
-    <div id="container">
-        <div id="globe-container"></div>
-        <div id="radio-player" class="hidden">
-            <div id="player-inner">
-                <div id="player-cover"><span id="cover-icon">🎵</span></div>
-                <div id="player-meta">
-                    <div id="player-title-row">
-                        <span id="station-name">Select a station</span>
-                        <button id="fav-btn" title="收藏/取消收藏">★</button>
-                    </div>
-                    <div id="station-location"></div>
-                    <div id="player-links">
-                        <a id="station-homepage" href="#" target="_blank" style="display:none;">主页</a>
-                    </div>
-                    <div id="station-localtime" style="color:#FFD700;margin-top:2px;"></div>
-                </div>
-                <div id="player-controls">
-                    <button id="prev-station" title="Previous Station">⏮️</button>
-                    <button id="play-pause" class="play" aria-label="Play/Pause" style="padding:0;width:56px;height:56px;display:flex;align-items:center;justify-content:center;">
-                        <svg id="play-icon" viewBox="0 0 32 32" width="44" height="44" style="display:inline;vertical-align:middle;"><polygon points="8,6 26,16 8,26" fill="white"/></svg>
-                        <svg id="pause-icon" viewBox="0 0 32 32" width="44" height="44" style="display:none;vertical-align:middle;"><rect x="8" y="6" width="5" height="20" rx="2" fill="white"/><rect x="19" y="6" width="5" height="20" rx="2" fill="white"/></svg>
-                    </button>
-                    <button id="next-station" title="Next Station">⏭️</button>
-                    <button id="mute-btn" title="静音">🔊</button>
-                    <div id="volume-control">
-                        <input type="range" id="volume" min="0" max="100" value="100">
-                    </div>
-                </div>
-            </div>
-            <div id="player-status"></div>
+  <div id="container">
+    <div id="globe-container"></div>
+    <div id="radio-player" class="hidden">
+      <div id="player-inner">
+        <div id="player-cover"><span id="cover-icon">🎵</span></div>
+        <div id="player-meta">
+          <div id="player-title-row">
+            <span id="station-name">Select a station</span>
+            <button id="fav-btn" title="收藏/取消收藏">★</button>
+          </div>
+          <div id="station-location"></div>
+          <div id="player-links">
+            <a id="station-homepage" href="#" target="_blank" style="display:none;">主页</a>
+          </div>
+          <div id="station-localtime" style="color:#FFD700;margin-top:2px;"></div>
         </div>
-        <!-- 电台列表侧边栏 -->
-        <div id="station-list-sidebar" class="hidden">
-          <div id="station-list-header">
-            <span id="station-list-back" title="返回" style="cursor:pointer;font-size:20px;margin-right:12px;">←</span>
-            <span id="station-list-title">电台列表</span> <span id="station-list-close">×</span>
+        <div id="player-controls">
+          <button id="prev-station" title="Previous Station">⏮️</button>
+          <button id="play-pause" class="play" aria-label="Play/Pause"
+            style="padding:0;width:56px;height:56px;display:flex;align-items:center;justify-content:center;">
+            <svg id="play-icon" viewBox="0 0 32 32" width="44" height="44"
+              style="display:inline;vertical-align:middle;">
+              <polygon points="8,6 26,16 8,26" fill="white" />
+            </svg>
+            <svg id="pause-icon" viewBox="0 0 32 32" width="44" height="44" style="display:none;vertical-align:middle;">
+              <rect x="8" y="6" width="5" height="20" rx="2" fill="white" />
+              <rect x="19" y="6" width="5" height="20" rx="2" fill="white" />
+            </svg>
+          </button>
+          <button id="next-station" title="Next Station">⏭️</button>
+          <button id="mute-btn" title="静音">🔊</button>
+          <div id="volume-control">
+            <input type="range" id="volume" min="0" max="100" value="100">
           </div>
-          <div id="station-list-tabs">
-            <button class="station-tab active" data-tab="all">全部</button>
-            <button class="station-tab" data-tab="fav">收藏</button>
-            <button class="station-tab" data-tab="history">历史</button>
-          </div>
-          <div id="station-list-search-wrap">
-            <input id="station-list-search" type="text" placeholder="搜索电台/国家/城市..." autocomplete="off" />
-          </div>
-          <ul id="station-list"></ul>
         </div>
-    </div>
-    <!-- 右上角大洲/国家选择器 -->
-    <div id="region-selector">
-      <button id="region-toggle">🌍 地区筛选</button>
-      <div id="region-dropdown" class="hidden">
-        <select id="continent-select">
-          <option value="">选择大洲</option>
-        </select>
-        <select id="country-select" disabled>
-          <option value="">选择国家</option>
-        </select>
       </div>
+      <div id="player-status"></div>
     </div>
-    <!-- 左上角语言切换国旗按钮 -->
-    <div id="lang-switcher">
-      <button class="lang-btn" data-lang="en" title="English"><img src="flags/gb.svg" alt="English" style="width:28px;height:28px;vertical-align:middle;"></button>
-      <button class="lang-btn" data-lang="it" title="Italiano"><img src="flags/it.svg" alt="Italiano" style="width:28px;height:28px;vertical-align:middle;"></button>
-      <button class="lang-btn" data-lang="zh" title="中文"><img src="flags/cn.svg" alt="中文" style="width:28px;height:28px;vertical-align:middle;"></button>
+    <!-- 电台列表侧边栏 -->
+    <div id="filter-list-sidebar" class="function-sidebar hidden">
+      <div id="filter-list-header" class="sidebar-header">
+        <span id="filter-list-back" class="sidebar-back" title="返回"
+          style="cursor:pointer;font-size:20px;margin-right:12px;">←</span>
+        <span id="filter-list-title" class="sidebar-title">电台列表</span> <span id="filter-list-close"
+          class="sidebar-close">×</span>
+      </div>
+      <div id="filter-list-tabs" class="sidebar-tabs"></div>
+      <div id="filter-actions-container" class="sidebar-actions">
+        <button id="apply-filters-btn" class="filter-btn btn-primary">Apply Filters</button>
+        <button id="reset-filters-btn" class="filter-btn btn-secondary">Reset Filters</button>
+        <button id="goto-stations-btn" class="filter-btn btn-special">Go to Stations</button>
+      </div>
+      <div id="filter-list-container"></div>
     </div>
-    <script type="module" src="main.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/tz-lookup@6.1.34/tz.min.js"></script>
-    <style>
-      #region-selector {
-        position: fixed;
-        top: 24px;
-        right: 32px;
-        z-index: 2000;
-        font-family: inherit;
-      }
-      #region-toggle {
-        background: #222;
-        color: #fff;
-        border: none;
-        border-radius: 22px;
-        padding: 10px 22px;
-        font-size: 16px;
-        box-shadow: 0 2px 8px #0003;
-        cursor: pointer;
-        transition: background 0.2s;
-      }
-      #region-toggle:hover {
-        background: #444;
-      }
-      #region-dropdown {
-        margin-top: 10px;
-        background: #222;
-        border-radius: 12px;
-        box-shadow: 0 2px 12px #0006;
-        padding: 18px 18px 12px 18px;
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        min-width: 180px;
-        position: absolute;
-        right: 0;
-      }
-      #region-dropdown select {
-        width: 100%;
-        padding: 8px 10px;
-        border-radius: 6px;
-        border: 1px solid #444;
-        background: #111;
-        color: #fff;
-        font-size: 15px;
-        outline: none;
-      }
-      #region-dropdown.hidden {
-        display: none;
-      }
-      #station-list-sidebar {
-        position: fixed;
-        top: 0;
-        right: 0;
-        width: 540px;
-        height: 100vh;
-        background: rgba(20, 20, 20, 0.98);
-        color: #fff;
-        z-index: 3000;
-        box-shadow: -2px 0 16px #0008;
-        display: flex;
-        flex-direction: column;
-        transition: transform 0.2s;
-        min-width: 340px;
-        max-width: 98vw;
-      }
-      #station-list-sidebar.hidden {
-        display: none;
-      }
-      #station-list-header {
-        font-size: 20px;
-        font-weight: bold;
-        padding: 18px 24px 12px 24px;
-        border-bottom: 1px solid #333;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-      #station-list-tabs {
-        display: flex;
-        gap: 8px;
-        padding: 10px 24px 0 24px;
-        border-bottom: 1px solid #222;
-        margin-bottom: 0;
-      }
-      .station-tab {
-        background: none;
-        border: none;
-        color: #aaa;
-        font-size: 15px;
-        padding: 6px 16px;
-        border-radius: 16px 16px 0 0;
-        cursor: pointer;
-        transition: background 0.15s, color 0.15s;
-      }
-      .station-tab.active {
-        background: #222;
-        color: #4FC3F7;
-        font-weight: bold;
-      }
-      #station-list-back {
-        color: #4FC3F7;
-        margin-right: 10px;
-        transition: color 0.2s;
-      }
-      #station-list-back:hover {
-        color: #fff;
-      }
-      #station-list-close {
-        font-size: 26px;
-        cursor: pointer;
-        color: #aaa;
-        transition: color 0.2s;
-      }
-      #station-list-close:hover {
-        color: #fff;
-      }
-      #station-list {
-        flex: 1;
-        overflow-y: auto;
-        list-style: none;
-        padding: 0 0 16px 0;
-        margin: 0;
-      }
-      #station-list li {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 10px;
-        white-space: normal;
-        overflow: visible;
-        text-overflow: unset;
-        font-size: 17px;
-        padding: 14px 24px;
-      }
-      .station-main {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        flex: 1;
-        min-width: 0;
-      }
-      .station-ops {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        min-width: 120px;
-        justify-content: flex-end;
-      }
-      .station-localtime {
-        min-width: 48px;
-        text-align: right;
-        display: inline-block;
-      }
-      #station-list li:hover {
-        background: #333;
-      }
-      #station-list li .station-country {
-        color: #aaa;
-        font-size: 13px;
-        margin-left: 8px;
-      }
-      .fav-star {
-        font-size: 20px;
-        color: #aaa;
-        cursor: pointer;
-        margin-left: 8px;
-        transition: color 0.2s;
-        user-select: none;
-      }
-      .fav-star.faved {
-        color: #FFD700;
-        text-shadow: 0 0 6px #FFD70088;
-      }
-      #station-list-search-wrap {
-        padding: 10px 24px 0 24px;
-        background: #181818;
-      }
-      #station-list-search {
-        width: 100%;
-        padding: 8px 12px;
-        border-radius: 6px;
-        border: 1px solid #444;
-        background: #111;
-        color: #fff;
-        font-size: 15px;
-        outline: none;
-        margin-bottom: 4px;
-      }
-      #lang-switcher {
-        position: fixed;
-        top: 24px;
-        left: 32px;
-        z-index: 2100;
-        display: flex;
-        gap: 10px;
-      }
-      .lang-btn {
-        background: none;
-        border: none;
-        font-size: 28px;
-        cursor: pointer;
-        filter: grayscale(0.3);
-        transition: filter 0.2s, transform 0.2s;
-        outline: none;
-      }
-      .lang-btn.active {
-        filter: grayscale(0) drop-shadow(0 0 6px #4FC3F7);
-        transform: scale(1.12);
-      }
-      .lang-btn:hover {
-        filter: grayscale(0) brightness(1.2);
-      }
-      /* Modern Radio Player Styles */
+    <!-- 电台列表侧边栏 -->
+    <div id="station-list-sidebar" class="function-sidebar hidden">
+      <div id="station-list-header" class="sidebar-header">
+        <span id="station-list-back" class="sidebar-back" title="返回"
+          style="cursor:pointer;font-size:20px;margin-right:12px;">←</span>
+        <span id="station-list-title" class="sidebar-title">电台列表</span> <span id="station-list-close"
+          class="sidebar-close">×</span>
+      </div>
+      <div id="station-list-tabs" class="sidebar-tabs">
+        <button class="sidebar-tab active" data-tab="all">全部</button>
+        <button class="sidebar-tab" data-tab="fav">收藏</button>
+        <button class="sidebar-tab" data-tab="history">历史</button>
+        <button class="sidebar-tab" data-tab="similar">相似</button>
+      </div>
+      <div id="station-list-search-wrap">
+        <input id="station-list-search" type="text" placeholder="搜索电台/国家/城市..." autocomplete="off" />
+      </div>
+      <ul id="station-list"></ul>
+    </div>
+  </div>
+
+  <!-- 右上角大洲/国家选择器 -->
+  <div id="filter-selector" class="function-selector">
+    <button id="filter-toggle" class="function-toggle">📜 过滤列表</button>
+  </div>
+
+  <div id="station-selector" class="function-selector">
+    <button id="station-toggle" class="function-toggle">📻 电台列表</button>
+  </div>
+
+  <div id="login-selector" class="function-selector">
+
+    <div id="login-dropdown" class="hidden">
+      <form action="/api/auth/login" method="post" id="login-form">
+        <input autocomplete="off" autofocus name="username" placeholder="Username" type="text">
+        <input name="password" placeholder="Password" type="password">
+        <button type="submit">Login</button>
+      </form>
+      <form action="/api/auth/register" method="post" id="register-form">
+        <input autocomplete="off" autofocus name="username" placeholder="Username" type="text">
+        <input name="password" placeholder="Password" type="password">
+        <button type="submit">Register</button>
+      </form>
+      <button id="logout-button">🚪 Logout</button>
+    </div>
+
+    <button id="login-toggle" class="function-toggle">🧑 帐户</button>
+  </div>
+
+
+  <!-- 左上角语言切换国旗按钮 -->
+  <div id="lang-switcher">
+    <button class="lang-btn" data-lang="en" title="English"><img src="flags/gb.svg" alt="English"
+        style="width:28px;height:28px;vertical-align:middle;"></button>
+    <button class="lang-btn" data-lang="it" title="Italiano"><img src="flags/it.svg" alt="Italiano"
+        style="width:28px;height:28px;vertical-align:middle;"></button>
+    <button class="lang-btn" data-lang="zh" title="中文"><img src="flags/cn.svg" alt="中文"
+        style="width:28px;height:28px;vertical-align:middle;"></button>
+  </div>
+  <script type="module" src="main.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tz-lookup@6.1.25/tz.min.js"></script>
+  <style>
+    #filter-selector {
+      position: fixed;
+      top: 24px;
+      right: 32px;
+      z-index: 2000;
+      font-family: inherit;
+    }
+
+    #station-selector {
+      position: fixed;
+      top: 74px;
+      right: 32px;
+      z-index: 2000;
+      font-family: inherit;
+    }
+
+    #login-selector {
+      position: fixed;
+      bottom: 24px;
+      right: 32px;
+      z-index: 2000;
+      font-family: inherit;
+    }
+
+    .function-toggle {
+      background: #222;
+      color: #fff;
+      border: none;
+      border-radius: 22px;
+      padding: 10px 22px;
+      font-size: 16px;
+      box-shadow: 0 2px 8px #0003;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .function-toggle:hover {
+      background: #444;
+    }
+
+    #login-dropdown {
+      margin-top: 10px;
+      background: #222;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px #0006;
+      padding: 18px 18px 12px 18px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      gap: 12px;
+      min-width: 180px;
+      position: absolute;
+      bottom: 50px;
+      right: 0;
+    }
+
+    #login-dropdown.hidden {
+      display: none;
+    }
+
+    .function-sidebar {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 540px;
+      height: 100vh;
+      background: rgba(20, 20, 20, 0.98);
+      color: #fff;
+      z-index: 3000;
+      box-shadow: -2px 0 16px #0008;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s;
+      min-width: 340px;
+      max-width: 98vw;
+    }
+
+    .function-sidebar.hidden {
+      display: none;
+    }
+
+    .sidebar-header {
+      font-size: 20px;
+      font-weight: bold;
+      padding: 18px 24px 12px 24px;
+      border-bottom: 1px solid #333;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .sidebar-tabs {
+      display: flex;
+      justify-content: space-evenly;
+      gap: 8px;
+      padding: 10px 24px 0 24px;
+      border-bottom: 1px solid #222;
+      margin-bottom: 0;
+    }
+
+    .station-tab {
+      background: none;
+      border: none;
+      color: #aaa;
+      font-size: 15px;
+      padding: 6px 16px;
+      border-radius: 16px 16px 0 0;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .station-tab.active {
+      background: #222;
+      color: #4FC3F7;
+      font-weight: bold;
+    }
+
+    .sidebar-tab {
+      background: none;
+      border: none;
+      color: #aaa;
+      font-size: 15px;
+      padding: 6px 16px;
+      border-radius: 16px 16px 0 0;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .sidebar-tab.active {
+      background: #222;
+      color: #4FC3F7;
+      font-weight: bold;
+    }
+
+    .sidebar-back {
+      color: #4FC3F7;
+      margin-right: 10px;
+      transition: color 0.2s;
+    }
+
+    .sidebar-back:hover {
+      color: #fff;
+    }
+
+    .sidebar-close {
+      font-size: 26px;
+      cursor: pointer;
+      color: #aaa;
+      transition: color 0.2s;
+    }
+
+    .sidebar-close:hover {
+      color: #fff;
+    }
+
+    #station-list {
+      flex: 1;
+      overflow-y: auto;
+      list-style: none;
+      padding: 0 0 16px 0;
+      margin: 0;
+    }
+
+    #station-list li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      white-space: normal;
+      overflow: visible;
+      text-overflow: unset;
+      font-size: 17px;
+      padding: 14px 24px;
+    }
+
+    .filter-list {
+      flex: 1;
+      overflow-y: auto;
+      list-style: none;
+      padding: 0 0 16px 0;
+      margin: 0;
+      gap: 10px;
+      display: none;
+    }
+
+    .filter-list.active {
+      display: block;
+    }
+
+    #filter-list-container {
+      display: flex;
+      height: 65vh;
+    }
+
+    .filter-list li {
+      display: flex;
+      align-items: center;
+      font-size: 17px;
+      padding: 14px 24px;
+      border-radius: 10px;
+      margin: 2px 0;
+      transition: background-color 0.2s ease-in-out;
+    }
+
+    .filter-list li label {
+      display: flex;
+      align-items: center;
+
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .filter-list li:hover {
+      background-color: #2a2a2e;
+      cursor: pointer;
+    }
+
+    .filter-list input[type="checkbox"] {
+      appearance: none;
+      -webkit-appearance: none;
+      margin: 0;
+      flex-shrink: 0;
+      height: 18px;
+      width: 18px;
+      background-color: #333;
+      border: 2px solid #555;
+      border-radius: 4px;
+      margin-right: 12px;
+      display: grid;
+      place-content: center;
+      cursor: pointer;
+      transition: background-color 0.2s, border-color 0.2s;
+    }
+
+    .filter-list input[type="checkbox"]::before {
+      content: '';
+      width: 10px;
+      height: 10px;
+      transform: scale(0);
+      transition: transform 0.1s ease-in-out;
+      background-color: #ffffff;
+      clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+    }
+
+    .filter-list input[type="checkbox"]:checked {
+      background-color: #00aaff;
+      border-color: #00aaff;
+    }
+
+    .filter-list input[type="checkbox"]:checked::before {
+      transform: scale(1);
+    }
+
+    .filter-countries {
+      flex: 1;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-color: #2a2a2e;
+      color: #e0e0e0;
+      border: 1px solid #555;
+      border-radius: 8px;
+      padding: 12px 40px 12px 15px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 16px;
+      min-width: 180px;
+      transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+
+    .filter-countries:hover {
+      border-color: #888;
+    }
+
+    .filter-countries:focus {
+      outline: none;
+      border-color: #00aaff;
+      box-shadow: 0 0 0 3px rgba(0, 170, 255, 0.2);
+    }
+
+    .filter-countries:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      background-color: #222;
+    }
+
+    .filter-countries option {
+      background-color: #2a2a2e;
+      color: #e0e0e0;
+      padding: 10px;
+    }
+
+    #country-filter-container {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 20px;
+      padding: 0 20px;
+    }
+
+    #station-list-search-wrap {
+      padding: 10px 24px 0 24px;
+      background: #181818;
+    }
+
+    #station-list-search {
+      width: 100%;
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid #444;
+      background: #111;
+      color: #fff;
+      font-size: 15px;
+      outline: none;
+      margin-bottom: 4px;
+    }
+
+    .station-main {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .station-ops {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 120px;
+      justify-content: flex-end;
+    }
+
+    .station-localtime {
+      min-width: 48px;
+      text-align: right;
+      display: inline-block;
+    }
+
+    #station-list li:hover {
+      background: #333;
+    }
+
+    #station-list li .station-country {
+      color: #aaa;
+      font-size: 13px;
+      margin-left: 8px;
+    }
+
+    .fav-star {
+      font-size: 20px;
+      color: #aaa;
+      cursor: pointer;
+      margin-left: 8px;
+      transition: color 0.2s;
+      user-select: none;
+    }
+
+    .fav-star.faved {
+      color: #FFD700;
+      text-shadow: 0 0 6px #FFD70088;
+    }
+
+    .sidebar-actions {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      padding: 20px 0;
+    }
+
+    .filter-btn {
+      border: none;
+      border-radius: 8px;
+      padding: 12px 20px;
+      font-size: 16px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+      outline: none;
+    }
+
+    .filter-btn.btn-primary {
+      background-color: #00aaff;
+      color: #ffffff;
+    }
+
+    .filter-btn.btn-primary:hover {
+      background-color: #0099e6;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0, 170, 255, 0.2);
+    }
+
+    .filter-btn.btn-secondary {
+      background-color: transparent;
+      color: #a0a0a0;
+      border: 2px solid #555;
+    }
+
+    .filter-btn.btn-secondary:hover {
+      background-color: #555;
+      color: #ffffff;
+      border-color: #555;
+    }
+
+    .filter-btn.btn-special {
+      background-color: transparent;
+      color: #00aaff;
+      border: 2px solid #00aaff;
+    }
+
+    .filter-btn.btn-special:hover {
+      background-color: #00aaff;
+      color: #ffffff;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0, 170, 255, 0.2);
+    }
+
+    .filter-btn:active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+
+    #lang-switcher {
+      position: fixed;
+      top: 24px;
+      left: 32px;
+      z-index: 2100;
+      display: flex;
+      gap: 10px;
+    }
+
+    .lang-btn {
+      background: none;
+      border: none;
+      font-size: 28px;
+      cursor: pointer;
+      filter: grayscale(0.3);
+      transition: filter 0.2s, transform 0.2s;
+      margin: 5px;
+      outline: none;
+    }
+
+    .lang-btn.active {
+      filter: grayscale(0) drop-shadow(0 0 6px #4FC3F7);
+      transform: scale(1.12);
+    }
+
+    .lang-btn:hover {
+      filter: grayscale(0) brightness(1.2);
+    }
+
+    /* Modern Radio Player Styles */
+    #radio-player {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      right: auto;
+      bottom: 0;
+      z-index: 4000;
+      background: rgba(24, 28, 36, 0.85);
+      backdrop-filter: blur(12px) saturate(1.2);
+      box-shadow: 0 -2px 24px #0008;
+      border-radius: 18px 18px 0 0;
+      padding: 0;
+      margin: 0 auto;
+      max-width: 1000px;
+      min-width: 320px;
+      width: 95vw;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      transition: bottom 0.2s;
+    }
+
+    #player-inner {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 18px 24px 10px 18px;
+    }
+
+    #player-cover {
+      width: 54px;
+      height: 54px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #222 60%, #444 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      color: #4FC3F7;
+      box-shadow: 0 2px 8px #0004;
+      flex-shrink: 0;
+    }
+
+    #player-meta {
+      min-width: 0;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    #player-title-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #fff;
+    }
+
+    #station-name {
+      white-space: normal;
+      overflow: visible;
+      text-overflow: unset;
+      max-width: none;
+      font-size: 20px;
+    }
+
+    #fav-btn {
+      background: none;
+      border: none;
+      color: #aaa;
+      font-size: 22px;
+      cursor: pointer;
+      transition: color 0.2s;
+      padding: 0 2px;
+      filter: none;
+    }
+
+    #fav-btn.faved {
+      color: #FFD700;
+    }
+
+    #station-location {
+      max-width: none;
+      font-size: 16px;
+      white-space: normal;
+      overflow: visible;
+      text-overflow: unset;
+    }
+
+    #player-links {
+      margin-top: 2px;
+    }
+
+    #station-homepage {
+      color: #4FC3F7;
+      font-size: 13px;
+      text-decoration: underline;
+      margin-right: 8px;
+    }
+
+    #player-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: 8px;
+    }
+
+    #player-controls button {
+      background: #181c24;
+      border: none;
+      border-radius: 50%;
+      width: 38px;
+      height: 38px;
+      color: #fff;
+      font-size: 20px;
+      cursor: pointer;
+      box-shadow: 0 2px 8px #0003;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.18s, color 0.18s, transform 0.18s;
+      outline: none;
+    }
+
+    #player-controls button:active {
+      background: #222;
+      transform: scale(0.95);
+    }
+
+    #play-pause.play {
+      background: linear-gradient(135deg, #4FC3F7 60%, #1976D2 100%);
+      color: #fff;
+      font-size: 26px;
+      width: 48px;
+      height: 48px;
+      box-shadow: 0 2px 12px #4FC3F766;
+    }
+
+    #volume-control {
+      margin-left: 8px;
+      width: 80px;
+      display: flex;
+      align-items: center;
+    }
+
+    #volume {
+      width: 100%;
+      accent-color: #4FC3F7;
+      background: #222;
+      border-radius: 4px;
+      height: 4px;
+    }
+
+    #mute-btn {
+      font-size: 18px;
+      color: #4FC3F7;
+      background: none;
+      border: none;
+      margin-left: 2px;
+      margin-right: -2px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      transition: background 0.18s;
+    }
+
+    #mute-btn.muted {
+      color: #aaa;
+    }
+
+    #player-status {
+      text-align: center;
+      color: #FFD700;
+      font-size: 14px;
+      padding-bottom: 6px;
+      min-height: 18px;
+      letter-spacing: 0.5px;
+    }
+
+    @media (max-width: 600px) {
       #radio-player {
-        position: fixed;
-        left: 50%;
-        transform: translateX(-50%);
-        right: auto;
-        bottom: 0;
-        z-index: 4000;
-        background: rgba(24, 28, 36, 0.85);
-        backdrop-filter: blur(12px) saturate(1.2);
-        box-shadow: 0 -2px 24px #0008;
-        border-radius: 18px 18px 0 0;
-        padding: 0;
-        margin: 0 auto;
-        max-width: 1000px;
-        min-width: 320px;
-        width: 95vw;
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        transition: bottom 0.2s;
-      }
-      #player-inner {
-        display: flex;
-        align-items: center;
-        gap: 18px;
-        padding: 18px 24px 10px 18px;
-      }
-      #player-cover {
-        width: 54px;
-        height: 54px;
-        border-radius: 12px;
-        background: linear-gradient(135deg, #222 60%, #444 100%);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 32px;
-        color: #4FC3F7;
-        box-shadow: 0 2px 8px #0004;
-        flex-shrink: 0;
-      }
-      #player-meta {
+        max-width: 100vw;
         min-width: 0;
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
+        width: 100vw;
+        border-radius: 12px 12px 0 0;
+        padding: 0;
       }
-      #player-title-row {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 18px;
-        font-weight: bold;
-        color: #fff;
+
+      #player-inner {
+        padding: 12px 6px 6px 6px;
+        gap: 10px;
       }
-      #station-name {
-        white-space: normal;
-        overflow: visible;
-        text-overflow: unset;
-        max-width: none;
-        font-size: 20px;
-      }
-      #fav-btn {
-        background: none;
-        border: none;
-        color: #aaa;
-        font-size: 22px;
-        cursor: pointer;
-        transition: color 0.2s;
-        padding: 0 2px;
-        filter: none;
-      }
-      #fav-btn.faved {
-        color: #FFD700;
-      }
-      #station-location {
-        max-width: none;
-        font-size: 16px;
-        white-space: normal;
-        overflow: visible;
-        text-overflow: unset;
-      }
-      #player-links {
-        margin-top: 2px;
-      }
-      #station-homepage {
-        color: #4FC3F7;
-        font-size: 13px;
-        text-decoration: underline;
-        margin-right: 8px;
-      }
-      #player-controls {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin-left: 8px;
-      }
-      #player-controls button {
-        background: #181c24;
-        border: none;
-        border-radius: 50%;
+
+      #player-cover {
         width: 38px;
         height: 38px;
-        color: #fff;
-        font-size: 20px;
-        cursor: pointer;
-        box-shadow: 0 2px 8px #0003;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: background 0.18s, color 0.18s, transform 0.18s;
-        outline: none;
+        font-size: 22px;
       }
-      #player-controls button:active {
-        background: #222;
-        transform: scale(0.95);
+
+      #station-name {
+        max-width: 90px;
+        font-size: 15px;
       }
+
+      #station-location {
+        max-width: 100px;
+        font-size: 12px;
+      }
+
+      #player-controls button {
+        width: 28px;
+        height: 28px;
+        font-size: 15px;
+      }
+
       #play-pause.play {
-        background: linear-gradient(135deg, #4FC3F7 60%, #1976D2 100%);
-        color: #fff;
-        font-size: 26px;
-        width: 48px;
-        height: 48px;
-        box-shadow: 0 2px 12px #4FC3F766;
-      }
-      #volume-control {
-        margin-left: 8px;
-        width: 80px;
-        display: flex;
-        align-items: center;
-      }
-      #volume {
-        width: 100%;
-        accent-color: #4FC3F7;
-        background: #222;
-        border-radius: 4px;
-        height: 4px;
-      }
-      #mute-btn {
+        width: 36px;
+        height: 36px;
         font-size: 18px;
-        color: #4FC3F7;
-        background: none;
-        border: none;
-        margin-left: 2px;
-        margin-right: -2px;
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        transition: background 0.18s;
       }
-      #mute-btn.muted {
-        color: #aaa;
+
+      #volume-control {
+        width: 50px;
       }
-      #player-status {
-        text-align: center;
-        color: #FFD700;
-        font-size: 14px;
-        padding-bottom: 6px;
-        min-height: 18px;
-        letter-spacing: 0.5px;
-      }
-      @media (max-width: 600px) {
-        #radio-player {
-          max-width: 100vw;
-          min-width: 0;
-          width: 100vw;
-          border-radius: 12px 12px 0 0;
-          padding: 0;
-        }
-        #player-inner {
-          padding: 12px 6px 6px 6px;
-          gap: 10px;
-        }
-        #player-cover {
-          width: 38px;
-          height: 38px;
-          font-size: 22px;
-        }
-        #station-name {
-          max-width: 90px;
-          font-size: 15px;
-        }
-        #station-location {
-          max-width: 100px;
-          font-size: 12px;
-        }
-        #player-controls button {
-          width: 28px;
-          height: 28px;
-          font-size: 15px;
-        }
-        #play-pause.play {
-          width: 36px;
-          height: 36px;
-          font-size: 18px;
-        }
-        #volume-control {
-          width: 50px;
-        }
-      }
-    </style>
+    }
+  </style>
 </body>
-</html> 
+
+</html>
